@@ -1,65 +1,141 @@
-import Image from "next/image";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Layers3,
+  Sparkles,
+  UsersRound,
+  Zap,
+} from "lucide-react";
+import { getCurrentUser } from "@/lib/auth";
 
-export default function Home() {
+export default async function Home() {
+  const user = await getCurrentUser();
+  if (user) redirect("/dashboard");
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main className="landing-page">
+      <nav className="landing-nav">
+        <Link href="/" className="brand">
+          <span className="brand-mark">
+            <Layers3 size={20} />
+          </span>
+          <span>Focusboard</span>
+        </Link>
+        <div className="landing-nav-actions">
+          <Link href="/login" className="button button-ghost">
+            Log in
+          </Link>
+          <Link href="/register" className="button button-primary">
+            Start planning
+          </Link>
+        </div>
+      </nav>
+
+      <section className="hero">
+        <div className="hero-copy">
+          <div className="eyebrow">
+            <Sparkles size={15} />
+            A calmer way to ship great work
+          </div>
+          <h1>
+            Turn ambitious ideas into{" "}
+            <span className="gradient-text">visible progress.</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p>
+            Plan projects, move work forward, and keep your team aligned in one
+            thoughtfully designed workspace.
           </p>
+          <div className="hero-actions">
+            <Link href="/register" className="button button-primary button-large">
+              Create your workspace
+              <ArrowRight size={18} />
+            </Link>
+            <Link href="/login" className="button button-secondary button-large">
+              Try the demo
+            </Link>
+          </div>
+          <div className="hero-proof">
+            <span>
+              <CheckCircle2 size={16} /> Free local setup
+            </span>
+            <span>
+              <CheckCircle2 size={16} /> No credit card
+            </span>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="hero-visual" aria-label="Focusboard product preview">
+          <div className="preview-glow" />
+          <div className="preview-window">
+            <div className="preview-sidebar">
+              <div className="preview-logo" />
+              <div className="preview-nav active" />
+              <div className="preview-nav" />
+              <div className="preview-nav short" />
+            </div>
+            <div className="preview-content">
+              <div className="preview-header">
+                <div>
+                  <span />
+                  <strong />
+                </div>
+                <button />
+              </div>
+              <div className="preview-board">
+                {[
+                  ["Backlog", 2],
+                  ["In progress", 3],
+                  ["In review", 2],
+                ].map(([name, count], columnIndex) => (
+                  <div className="preview-column" key={String(name)}>
+                    <div className="preview-column-title">
+                      <span>{name}</span>
+                      <small>{count}</small>
+                    </div>
+                    {Array.from({ length: Number(count) }).map((_, taskIndex) => (
+                      <div className="preview-card" key={taskIndex}>
+                        <i className={`tone-${columnIndex + 1}`} />
+                        <b />
+                        <em />
+                        <div>
+                          <span />
+                          <small />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section className="feature-strip">
+        <article>
+          <Zap />
+          <div>
+            <h3>Move faster</h3>
+            <p>Drag work through a clear, flexible delivery flow.</p>
+          </div>
+        </article>
+        <article>
+          <UsersRound />
+          <div>
+            <h3>Stay aligned</h3>
+            <p>Ownership, priorities, and context live with every task.</p>
+          </div>
+        </article>
+        <article>
+          <Layers3 />
+          <div>
+            <h3>See the whole plan</h3>
+            <p>Switch between projects without losing your place.</p>
+          </div>
+        </article>
+      </section>
+    </main>
   );
 }
