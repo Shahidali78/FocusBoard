@@ -1,9 +1,13 @@
 # Focusboard
 
 Focusboard is a full-stack project management application built with Next.js,
-TypeScript, Prisma, and SQLite. It gives teams a focused workspace for planning
+TypeScript, Prisma, and PostgreSQL. It gives teams a focused workspace for planning
 projects, assigning work, tracking deadlines, and moving tasks through a Kanban
 workflow.
+
+## Live Demo
+
+https://focusboard-nu.vercel.app
 
 ## Highlights
 
@@ -18,7 +22,8 @@ workflow.
 - Project completion, task, and overdue metrics
 - Responsive desktop and mobile experience
 - Seeded demo workspace for immediate exploration
-- Prisma migrations, validation tests, linting, and production build checks
+- Neon-hosted PostgreSQL with production migrations
+- GitHub Actions validation for linting, tests, types, and builds
 
 ## Tech Stack
 
@@ -27,7 +32,7 @@ workflow.
 | Framework | Next.js 16 App Router |
 | Language | TypeScript |
 | UI | React 19, Tailwind CSS 4, custom CSS |
-| Database | SQLite |
+| Database | PostgreSQL on Neon |
 | ORM | Prisma ORM 7 |
 | Authentication | BCrypt, JOSE/JWT, HTTP-only cookies |
 | Drag and drop | dnd-kit |
@@ -70,8 +75,9 @@ On PowerShell:
 Copy-Item .env.example .env
 ```
 
-For production, replace `SESSION_SECRET` with at least 32 random characters and
-set `SESSION_SECURE_COOKIE="true"` when the app is served over HTTPS.
+Set `DATABASE_URL` to a pooled PostgreSQL connection and `DIRECT_URL` to its
+direct connection. Replace `SESSION_SECRET` with at least 32 random characters
+and set `SESSION_SECURE_COOKIE="true"` when the app is served over HTTPS.
 
 Create and seed the database:
 
@@ -88,6 +94,23 @@ npm run dev
 ```
 
 Open http://localhost:3000.
+
+## Deployment
+
+The production project uses Vercel and a Neon PostgreSQL database provisioned
+through Vercel Marketplace.
+
+Required environment variables:
+
+```text
+DATABASE_URL
+DATABASE_URL_UNPOOLED
+SESSION_SECRET
+SESSION_SECURE_COOKIE=true
+```
+
+Vercel runs `npm run vercel-build`, which generates Prisma Client, applies
+pending production migrations, and creates the optimized Next.js build.
 
 ## Available Commands
 
@@ -168,7 +191,6 @@ src/
 - Real-time updates with WebSockets
 - Calendar and timeline views
 - Email notifications
-- PostgreSQL production profile
 - Audit log export
 - Playwright browser tests
 

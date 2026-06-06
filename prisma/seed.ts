@@ -1,6 +1,6 @@
-import "dotenv/config";
+import { config } from "dotenv";
+import { PrismaNeon } from "@prisma/adapter-neon";
 import { hash } from "bcryptjs";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import {
   ActivityType,
   PrismaClient,
@@ -8,9 +8,16 @@ import {
   WorkspaceRole,
 } from "../src/generated/prisma/client";
 
-const adapter = new PrismaBetterSqlite3({
-  url: process.env.DATABASE_URL ?? "file:./prisma/dev.db",
-});
+config({ path: ".env.local" });
+config();
+
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error("DATABASE_URL is required");
+}
+
+const adapter = new PrismaNeon({ connectionString });
 const db = new PrismaClient({ adapter });
 
 async function main() {

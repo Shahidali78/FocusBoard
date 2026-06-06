@@ -48,3 +48,6 @@ next-env.d.ts
 
 # local runtime logs
 /target/
+
+# vercel project metadata
+/.vercel/
